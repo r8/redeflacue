@@ -9,4 +9,7 @@ try:
 except PackageNotFoundError:  # pragma: no cover - running from an uninstalled tree
     __version__ = "0.0.0+unknown"
 
-__all__ = ["__version__"]
+from redeflacue.processor import Extraction, plan_extractions
+from redeflacue.splitter import build_sox_command
+
+__all__ = ["Extraction", "__version__", "build_sox_command", "plan_extractions"]
