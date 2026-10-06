@@ -35,6 +35,9 @@ Homepage = "https://github.com/r8/redeflacue"
 Issues = "https://github.com/r8/redeflacue/issues"
 Changelog = "https://github.com/r8/redeflacue/blob/main/CHANGELOG.md"
 
+[project.scripts]
+redeflacue = "redeflacue.cli:main"
+
 [dependency-groups]
 dev = [
     "pytest>=8",
