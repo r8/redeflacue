@@ -49,6 +49,5 @@ jobs:
           files: coverage.xml
           flags: py${{ matrix.python-version }}-${{ matrix.os }}
           fail_ci_if_error: false
-          # Optional: add CODECOV_TOKEN under Settings -> Secrets and variables -> Actions
-          # (required by Codecov for private repos, recommended for public ones).
+          # Required for private repositories.
           token: ${{ secrets.CODECOV_TOKEN }}

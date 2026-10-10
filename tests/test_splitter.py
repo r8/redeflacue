@@ -44,11 +44,7 @@ def test_fmt_time_cd_frames_never_round_up_to_sixty() -> None:
 
 @pytest.mark.parametrize("mm", [0, 1, 3, 9, 42, 59, 74, 99])
 def test_cue_positions_divide_exactly_by_44100(mm: int) -> None:
-    """deflacue's 44.1k sample counts are always whole multiples of 588 (= 44100 / 75).
-
-    That makes ``samples / 44100.0`` the exact cue position, which is what lets
-    redeflacue reuse deflacue's parser without inheriting its rate assumption.
-    """
+    """Converting deflacue's sample offsets back to cue time loses no precision."""
     for ss in range(60):
         for ff in range(75):
             samples = pos_to_frames(f"{mm:02d}:{ss:02d}:{ff:02d}")

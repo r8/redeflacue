@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "redeflacue"
 dynamic = ["version"]
-description = "deflacue-compatible CUE splitter that cuts hi-res (96/192 kHz) FLAC correctly"
+description = "CUE + FLAC splitter that handles non-44.1 kHz audio"
 readme = "README.md"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
@@ -38,8 +38,6 @@ Changelog = "https://github.com/r8/redeflacue/blob/main/CHANGELOG.md"
 [project.scripts]
 redeflacue = "redeflacue.cli:main"
 
-# uv's native dev-dependency mechanism (PEP 735); installed by `uv sync` by default.
-# Supersedes the deprecated `[tool.uv] dev-dependencies` table.
 [dependency-groups]
 dev = [
     "pytest>=8",
@@ -73,7 +71,6 @@ warn_return_any = true
 strict_equality = true
 
 [[tool.mypy.overrides]]
-# deflacue ships no type information.
 module = ["deflacue", "deflacue.*"]
 ignore_missing_imports = true
 

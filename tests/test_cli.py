@@ -18,7 +18,6 @@ SOX = shutil.which("sox")
 
 @pytest.fixture
 def fake_sox(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Pretend sox is installed so --dry-run tests don't need the binary."""
     monkeypatch.setattr(cli.shutil, "which", lambda name: f"/usr/bin/{name}")
 
 
@@ -178,7 +177,6 @@ def sox_info(flag: str, path: Path) -> str:
 @pytest.mark.skipif(SOX is None, reason="sox not on PATH")
 @pytest.mark.parametrize("rate", [44100, 96000, 192000])
 def test_split_real_flac(tmp_path: Path, rate: int) -> None:
-    """Split a synthesized 24-bit FLAC and check every track has the cue length."""
     assert SOX is not None
     album = tmp_path / "album"
     album.mkdir()

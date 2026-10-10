@@ -1,5 +1,3 @@
-"""Cue sheet discovery, extraction planning and the per-cue run loop."""
-
 from __future__ import annotations
 
 import logging
@@ -15,16 +13,13 @@ from redeflacue.splitter import build_sox_command, run_sox, sanitize
 
 LOGGER = logging.getLogger(__name__)
 
-# deflacue stores TrackContext.start as 44.1 kHz samples. 44100 and the
-# CD-frame grid (75 Hz) are commensurate (588 samples/frame), so dividing
-# yields the exact cue position in seconds regardless of the source rate.
+# deflacue stores cue positions at 44.1 kHz; dividing by that rate recovers
+# the original 75-frames-per-second cue timestamp.
 CUE_SAMPLE_RATE = 44100.0
 
 
 @dataclass(frozen=True)
 class Extraction:
-    """One planned track cut: ``[start_s, end_s)`` of ``src`` written to ``dst``."""
-
     src: Path
     dst: Path
     start_s: float
@@ -33,7 +28,7 @@ class Extraction:
 
 
 def iter_cue_files(root: Path, recursive: bool) -> Iterator[Path]:
-    """Yield .cue files under ``root``, skipping previous ``deflacue`` output dirs."""
+    """Yield cue sheets, excluding previous output directories."""
     walker = root.rglob("*.cue") if recursive else root.glob("*.cue")
     for p in sorted(walker):
         if "deflacue" in p.parts:
@@ -42,7 +37,7 @@ def iter_cue_files(root: Path, recursive: bool) -> Iterator[Path]:
 
 
 def bundle_dir(cue: Any, target_root: Path) -> Path:
-    """Return ``target_root/<performer>/<[date - ]album>`` for a parsed cue."""
+    """Return the album output directory for a parsed cue sheet."""
     meta = cue.meta.data
     performer = sanitize(meta.get("PERFORMER", "Unknown"))
     album_raw = meta.get("ALBUM", "Unknown")
@@ -52,11 +47,7 @@ def bundle_dir(cue: Any, target_root: Path) -> Path:
 
 
 def plan_extractions(cue: Any, cue_dir: Path, target_root: Path) -> list[Extraction]:
-    """Turn a parsed :class:`deflacue.parser.CueData` into a list of track cuts.
-
-    Pure: touches neither sox nor the filesystem. Relative ``FILE`` paths are
-    resolved against ``cue_dir``; output files go under :func:`bundle_dir`.
-    """
+    """Build track extractions without touching SoX or the filesystem."""
     bundle = bundle_dir(cue, target_root)
     width = len(str(len(cue.tracks)))
     plan: list[Extraction] = []
@@ -77,7 +68,7 @@ def plan_extractions(cue: Any, cue_dir: Path, target_root: Path) -> list[Extract
 
 
 def process_cue(cue_file: Path, target_root: Path, encoding: str | None, dry_run: bool) -> None:
-    """Parse ``cue_file`` and extract all of its tracks under ``target_root``."""
+    """Parse a cue sheet and extract its tracks."""
     LOGGER.info("Processing %s", cue_file.name)
     cue = CueParser.from_file(fpath=cue_file, encoding=encoding).run()
 

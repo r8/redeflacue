@@ -1,5 +1,3 @@
-"""Command-line interface (argument surface mirrors deflacue)."""
-
 from __future__ import annotations
 
 import argparse
@@ -17,9 +15,7 @@ LOGGER = logging.getLogger("redeflacue")
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         prog="redeflacue",
-        description="deflacue-compatible CLI that splits high-res FLAC "
-        "correctly (24-bit, 96/192 kHz) by using time-based "
-        "sox trim instead of 44.1 kHz-assumed sample counts.",
+        description="Split CUE + FLAC images without assuming a 44.1 kHz sample rate.",
     )
     ap.add_argument("source", type=Path, help="Directory containing .cue files")
     ap.add_argument(
@@ -33,8 +29,8 @@ def build_parser() -> argparse.ArgumentParser:
         "-e", "--encoding", default=None, help="Encoding of the .cue file (e.g. windows-1251)"
     )
     ap.add_argument("-r", "--recursive", action="store_true", help="Recurse into subdirectories")
-    ap.add_argument("--dry-run", action="store_true", help="Log commands without executing them")
-    ap.add_argument("-v", "--verbose", action="store_true")
+    ap.add_argument("--dry-run", action="store_true", help="Plan tracks without running SoX")
+    ap.add_argument("-v", "--verbose", action="store_true", help="Show each SoX command")
     ap.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     return ap
 
