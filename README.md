@@ -1,5 +1,8 @@
 # redeflacue
 
+[![CI](https://github.com/r8/redeflacue/actions/workflows/ci.yml/badge.svg)](https://github.com/r8/redeflacue/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/redeflacue.svg)](https://pypi.org/project/redeflacue/)
+
 `redeflacue` splits CUE + FLAC album images without assuming a 44.1 kHz sample rate.
 
 It uses [deflacue](https://github.com/idlesign/deflacue) to parse cue sheets and keeps its
